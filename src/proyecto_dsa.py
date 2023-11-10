@@ -158,6 +158,11 @@ Vemos que la correlación más fuerte de Revenue es con PageValues"""
 # Construimos el histograma
 hist = val_num.hist(bins = 'auto', figsize=(20,20))
 
+
+
+
+
+
 """##### Pasos
 - Se realiza la importación de los datos
 - Se verifican datos nulos
