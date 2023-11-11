@@ -11,7 +11,7 @@ from sklearn.decomposition import PCA
 
 # Cargar tus datos (en este caso, se asume que ya tienes "X_pca" cargado)
 #Cargamos los datos
-df = pd.read_csv('data/online_shoppers_intention.csv', sep=',')
+df = pd.read_csv('Proyecto_DSA/data/online_shoppers_intention.csv', sep=',')
 df.Weekend = df.Weekend.replace({True: 1, False: 0})
 df.Revenue = df.Revenue.replace({True: 1, False: 0})
 
