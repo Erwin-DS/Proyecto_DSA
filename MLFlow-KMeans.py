@@ -39,6 +39,7 @@ pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
 
 def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
+<<<<<<< HEAD
     # Iniciamos una corrida de MLflow
    with mlflow.start_run(run_name=run_name) as run:
     
@@ -51,10 +52,23 @@ def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
     # Crear el modelo K-means
     kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
     kmeans.fit(X)
+=======
+    with mlflow.start_run(run_name=run_name):
+        # Log de parámetros en MLflow
+        mlflow.log_param("n_clusters", n_clusters)
 
-    # Calcular la puntuación de silhouette
-    silhouette_avg = silhouette_score(X, kmeans.labels_)
+        # Crear el modelo K-means
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+        kmeans.fit(X)
 
+        # Calcular la puntuación de silhouette
+        silhouette_avg = silhouette_score(X, kmeans.labels_)
+>>>>>>> origin/master
+
+        # Log de métricas en MLflow
+        mlflow.log_metric("silhouette_score", silhouette_avg)
+
+<<<<<<< HEAD
     # Log de métricas en MLflow
     mlflow.log_metric("silhouette_score", silhouette_avg)
 
@@ -62,10 +76,14 @@ def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
     mlflow.sklearn.log_model(kmeans, "model")
     
     return experiment_id, run_id
+=======
+        # Guardar el modelo en MLflow
+        mlflow.sklearn.log_model(kmeans, "model")
+        
+        return mlflow.active_run().info.experiment_id, mlflow.active_run().info.run_id
+>>>>>>> origin/master
 
 # Ejecutar la función con diferentes valores de clusters
 for n_clusters in [2, 3, 4, 5]:
     experiment_id, run_id = train_evaluate_kmeans(X_pca, n_clusters)
     print("MLflow Run completed with run_id {} and experiment_id {}".format(run_id, experiment_id))
-
-
