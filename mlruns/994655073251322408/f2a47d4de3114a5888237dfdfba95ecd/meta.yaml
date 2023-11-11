@@ -1,0 +1,15 @@
+artifact_uri: file:///home/ubuntu/Proyecto_DSA/mlruns/994655073251322408/f2a47d4de3114a5888237dfdfba95ecd/artifacts
+end_time: 1699732579307
+entry_point_name: ''
+experiment_id: '994655073251322408'
+lifecycle_stage: active
+run_id: f2a47d4de3114a5888237dfdfba95ecd
+run_name: nosy-dove-737
+run_uuid: f2a47d4de3114a5888237dfdfba95ecd
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1699732576773
+status: 3
+tags: []
+user_id: ubuntu
