@@ -18,12 +18,8 @@ import mlflow.sklearn
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
-mlruns_path = "/home/ubuntu/Proyecto_DSA/mlruns"
-
-os.environ['MLFLOW_EXPERIMENTS_URI'] = mlruns_path
-
 # defina el servidor para llevar el registro de modelos y artefactos
-mlflow.set_tracking_uri('http://localhost:5000')
+# mlflow.set_tracking_uri('http://localhost:5000')
 # registre el experimento
 experiment = mlflow.set_experiment("sklearn-diab")
 
@@ -54,3 +50,4 @@ with mlflow.start_run(experiment_id=experiment.experiment_id):
     mse = mean_squared_error(y_test, predictions)
     mlflow.log_metric("mse", mse)
     print(mse)
+    print(experiment_id)
