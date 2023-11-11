@@ -46,7 +46,7 @@ mlflow.set_experiment(experiment_name)
 num_clusters = 3
 
 # Crear y entrenar el modelo KMeans
-model = KMeans(n_clusters=num_clusters, random_state=42)
+model = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)
 model.fit(X_pca)
 
 # Predecir las etiquetas de los clústeres
