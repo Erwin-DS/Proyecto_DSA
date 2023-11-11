@@ -1,0 +1,15 @@
+artifact_uri: file:///home/ubuntu/Proyecto_DSA/mlruns/994655073251322408/82710058a30e484ea59adea965ba2db5/artifacts
+end_time: 1699733099512
+entry_point_name: ''
+experiment_id: '994655073251322408'
+lifecycle_stage: active
+run_id: 82710058a30e484ea59adea965ba2db5
+run_name: learned-trout-533
+run_uuid: 82710058a30e484ea59adea965ba2db5
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1699733096942
+status: 3
+tags: []
+user_id: ubuntu

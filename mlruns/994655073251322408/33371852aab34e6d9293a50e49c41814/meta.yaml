@@ -1,0 +1,15 @@
+artifact_uri: file:///home/ubuntu/Proyecto_DSA/mlruns/994655073251322408/33371852aab34e6d9293a50e49c41814/artifacts
+end_time: 1699733587365
+entry_point_name: ''
+experiment_id: '994655073251322408'
+lifecycle_stage: active
+run_id: 33371852aab34e6d9293a50e49c41814
+run_name: puzzled-donkey-70
+run_uuid: 33371852aab34e6d9293a50e49c41814
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1699733584782
+status: 3
+tags: []
+user_id: ubuntu

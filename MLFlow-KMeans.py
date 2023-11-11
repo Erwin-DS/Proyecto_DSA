@@ -4,6 +4,7 @@
 # Importe el conjunto de datos de online_shoppers_intention y divídalo en entrenamiento y prueba usando scikit-learn
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_diabetes
+import pandas as pd
 import os
 
 db = pd.read_csv('data/online_shoppers_intention.csv', sep=',')
