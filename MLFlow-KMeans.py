@@ -49,6 +49,8 @@ with mlflow.start_run(experiment_id=experiment.experiment_id):
     # Registre el modelo
     mlflow.sklearn.log_model(rf, "random-forest-model")
   
+
+  
     # Cree y registre la métrica de interés
     mse = mean_squared_error(y_test, predictions)
     mlflow.log_metric("mse", mse)
