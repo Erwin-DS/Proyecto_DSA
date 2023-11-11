@@ -38,52 +38,36 @@ X_scaled = scaler.fit_transform(X)
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
 
-def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
+# Configurar el experimento en MLflow con el nombre "Kmeans"
+experiment_name = "Kmeans"
+mlflow.set_experiment(experiment_name)
 
-    # Iniciamos una corrida de MLflow
-   with mlflow.start_run(run_name=run_name) as run:
-    
-    	# MLflow asigna un ID al experimento y a la corrida
-    	experiment_id = run.info.experiment_id
-    	run_id = run.info.run_uuid
+# Definir el número de clústeres (puedes ajustar esto según tus necesidades)
+num_clusters = 3
 
-    	# Log de parámetros en MLflow
-    	mlflow.log_param("n_clusters", n_clusters)
-    	# Crear el modelo K-means
-    	kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
-    	kmeans.fit(X)
+# Crear y entrenar el modelo KMeans
+model = KMeans(n_clusters=num_clusters, random_state=42)
+model.fit(X_pca)
 
-    with mlflow.start_run(run_name=run_name):
-        # Log de parámetros en MLflow
-        mlflow.log_param("n_clusters", n_clusters)
+# Predecir las etiquetas de los clústeres
+labels = model.labels_
 
-        # Crear el modelo K-means
-        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
-        kmeans.fit(X)
+# Calcular el coeficiente de silueta
+silhouette_avg = silhouette_score(X_pca, labels)
 
-        # Calcular la puntuación de silhouette
-        silhouette_avg = silhouette_score(X, kmeans.labels_)
-        origin/master
+# Lograr los resultados en MLflow
+with mlflow.start_run():
+    # Lograr el nombre del experimento y su ID
+    experiment_id = mlflow.get_experiment_by_name(experiment_name).experiment_id
+    mlflow.log_param("Experiment Name", experiment_name)
+    mlflow.log_param("Experiment ID", experiment_id)
 
-        # Log de métricas en MLflow
-        mlflow.log_metric("silhouette_score", silhouette_avg)
+    # Lograr los resultados del coeficiente de silueta
+    mlflow.log_param("Num Clusters", num_clusters)
+    mlflow.log_metric("Silhouette Score", silhouette_avg)
 
+    # Lograr el modelo (opcional, pero puedes querer hacer esto para reproducibilidad)
+    mlflow.sklearn.log_model(model, "KMeans_Model")
 
-    	# Log de métricas en MLflow
-    	mlflow.log_metric("silhouette_score", silhouette_avg)
-
-    	# Guardar el modelo en MLflow
-    	mlflow.sklearn.log_model(kmeans, "model")
-    
-    	return experiment_id, run_id
-
-        # Guardar el modelo en MLflow
-        mlflow.sklearn.log_model(kmeans, "model")
-        
-        return mlflow.active_run().info.experiment_id, mlflow.active_run().info.run_id
-
-
-# Ejecutar la función con diferentes valores de clusters
-for n_clusters in [2, 3, 4, 5]:
-    experiment_id, run_id = train_evaluate_kmeans(X_pca, n_clusters)
-    print("MLflow Run completed with run_id {} and experiment_id {}".format(run_id, experiment_id))
+# Finalmente, imprime el enlace a la interfaz web de MLflow
+print(f"Experiment URL: {mlflow.get_tracking_uri()}/#/experiments/{experiment_id}")
