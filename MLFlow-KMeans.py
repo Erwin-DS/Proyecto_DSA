@@ -7,9 +7,7 @@ from sklearn.datasets import load_diabetes
 import pandas as pd
 import os
 
-db = pd.read_csv('data/online_shoppers_intention.csv', sep=',')
-print(db)
-
+db = load_diabetes()
 X = db.data
 y = db.target
 X_train, X_test, y_train, y_test = train_test_split(X, y)
