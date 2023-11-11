@@ -50,4 +50,4 @@ with mlflow.start_run(experiment_id=experiment.experiment_id):
     mse = mean_squared_error(y_test, predictions)
     mlflow.log_metric("mse", mse)
     print(mse)
-    print(experiment_id)
+    print(experiment.experiment_id)
