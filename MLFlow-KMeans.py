@@ -1,4 +1,5 @@
 import mlflow
+import pandas as pd
 import mlflow.sklearn
 import numpy as np
 from sklearn.cluster import KMeans
@@ -37,11 +38,17 @@ X_scaled = scaler.fit_transform(X)
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
 
-# Cargar tus datos (en este caso, se asume que ya tienes "X_pca" cargado)
-# X_pca = ...
+def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
+    # Iniciamos una corrida de MLflow
+    mlflow.start_run(run_name=run_name)
+    run = mlflow.active_run()
+    # MLflow asigna un ID al experimento y a la corrida
+    experimentID = run.info.experiment_id
+    runID = run.info.run_uuid
 
-# Función para entrenar y evaluar el modelo K-means
-def train_evaluate_kmeans(X, n_clusters):
+    # Log de parámetros en MLflow
+    mlflow.log_param("n_clusters", n_clusters)
+
     # Crear el modelo K-means
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     kmeans.fit(X)
@@ -49,27 +56,19 @@ def train_evaluate_kmeans(X, n_clusters):
     # Calcular la puntuación de silhouette
     silhouette_avg = silhouette_score(X, kmeans.labels_)
 
-    # Obtener el ID del experimento actual
-    experiment_id = mlflow.get_experiment_by_name(mlflow.active_run().info.experiment_name).experiment_id
+    # Log de métricas en MLflow
+    mlflow.log_metric("silhouette_score", silhouette_avg)
 
-    # Log de parámetros y métricas en MLflow
-    with mlflow.start_run():
-        mlflow.log_param("n_clusters", n_clusters)
-        mlflow.log_metric("silhouette_score", silhouette_avg)
-
-        # Guardar el modelo en MLflow
-        mlflow.sklearn.log_model(kmeans, "model")
-
-        # Obtener el ID de la corrida actual
-        run_id = mlflow.active_run().info.run_id
-
+    # Guardar el modelo en MLflow
+    mlflow.sklearn.log_model(kmeans, "model")
+    
     # Finalizar la ejecución actual
     mlflow.end_run()
-
     return experiment_id, run_id
 
 # Ejecutar la función con diferentes valores de clusters
 for n_clusters in [2, 3, 4, 5]:
     experiment_id, run_id = train_evaluate_kmeans(X_pca, n_clusters)
     print("MLflow Run completed with run_id {} and experiment_id {}".format(run_id, experiment_id))
+
 
