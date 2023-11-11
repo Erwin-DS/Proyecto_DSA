@@ -1,5 +1,7 @@
 import mlflow
 import pandas as pd
+import os
+import mlflow
 import mlflow.sklearn
 import numpy as np
 from sklearn.cluster import KMeans
@@ -71,3 +73,6 @@ with mlflow.start_run():
 
 # Finalmente, imprime el enlace a la interfaz web de MLflow
 print(f"Experiment URL: {mlflow.get_tracking_uri()}/#/experiments/{experiment_id}")
+
+mlruns_location = mlflow.get_tracking_uri()
+print(f"Ubicación de mlruns: {mlruns_location}")
