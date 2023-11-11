@@ -1,78 +1,55 @@
-import mlflow
-import pandas as pd
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Importe el conjunto de datos de online_shoppers_intention y divídalo en entrenamiento y prueba usando scikit-learn
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_diabetes
 import os
+
+db = pd.read_csv('data/online_shoppers_intention.csv', sep=',')
+print(db)
+
+X = db.data
+y = db.target
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+#Importe MLFlow para registrar los experimentos, el regresor de bosques aleatorios y la métrica de error cuadrático medio
 import mlflow
 import mlflow.sklearn
-import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
 
-# Cargar tus datos (en este caso, se asume que ya tienes "X_pca" cargado)
-#Cargamos los datos
-df = pd.read_csv('data/online_shoppers_intention.csv', sep=',')
-df.Weekend = df.Weekend.replace({True: 1, False: 0})
-df.Revenue = df.Revenue.replace({True: 1, False: 0})
+mlruns_path = "/home/ubuntu/Proyecto_DSA/mlruns"
 
-df.Month = df.Month.replace({'Feb': 2, 'Mar': 3, 'May': 5, 'June': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov':11, 'Dec': 12})
-# Tenemos variables categoricas, por lo cual debemos crear la dummies correspondientes
-cat_cols = ['VisitorType']
-dummies = pd.get_dummies(df[cat_cols], prefix=cat_cols)
+os.environ['MLFLOW_EXPERIMENTS_URI'] = mlruns_path
 
-# Concatenamos los datos originales con las variables ficticias
-df_con_dummies = pd.concat([df, dummies], axis=1)
+# defina el servidor para llevar el registro de modelos y artefactos
+mlflow.set_tracking_uri('http://localhost:5000')
+# registre el experimento
+experiment = mlflow.set_experiment("sklearn-diab")
 
-# Eliminamos las variables originales ya que ahora tenemos las variables ficticias
-df_con_dummies = df_con_dummies.drop(cat_cols, axis=1)
-
-# Variables numericas
-val_num = df_con_dummies.select_dtypes(include=["number"])
-
-# Estandarizamos las variables
-X = val_num.values
-
-# Estandarizamos los datos
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# Reduce la dimensionalidad a 2D utilizando PCA
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X_scaled)
-
-# Configurar el experimento en MLflow con el nombre "Kmeans"
-experiment_name = "Kmeans"
-mlflow.set_experiment(experiment_name)
-
-# Definir el número de clústeres (puedes ajustar esto según tus necesidades)
-num_clusters = 4
-
-# Crear y entrenar el modelo KMeans
-model = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)
-model.fit(X_pca)
-
-# Predecir las etiquetas de los clústeres
-labels = model.labels_
-
-# Calcular el coeficiente de silueta
-silhouette_avg = silhouette_score(X_pca, labels)
-
-# Lograr los resultados en MLflow
-with mlflow.start_run():
-    # Lograr el nombre del experimento y su ID
-    experiment_id = mlflow.get_experiment_by_name(experiment_name).experiment_id
-    mlflow.log_param("Experiment Name", experiment_name)
-    mlflow.log_param("Experiment ID", experiment_id)
-
-    # Lograr los resultados del coeficiente de silueta
-    mlflow.log_param("Num Clusters", num_clusters)
-    mlflow.log_metric("Silhouette Score", silhouette_avg)
-
-    # Lograr el modelo (opcional, pero puedes querer hacer esto para reproducibilidad)
-    mlflow.sklearn.log_model(model, "KMeans_Model")
-
-# Finalmente, imprime el enlace a la interfaz web de MLflow
-print(f"Experiment URL: {mlflow.get_tracking_uri()}/#/experiments/{experiment_id}")
-
-mlruns_location = mlflow.get_tracking_uri()
-print(f"Ubicación de mlruns: {mlruns_location}")
+# Aquí se ejecuta MLflow sin especificar un nombre o id del experimento. MLflow los crea un experimento para este cuaderno por defecto y guarda las características del experimento y las métricas definidas. 
+# Para ver el resultado de las corridas haga click en Experimentos en el menú izquierdo. 
+with mlflow.start_run(experiment_id=experiment.experiment_id):
+    # defina los parámetros del modelo
+    n_estimators = 200 
+    max_depth = 6
+    max_features = 4
+    # Cree el modelo con los parámetros definidos y entrénelo
+    rf = RandomForestRegressor(n_estimators = n_estimators, max_depth = max_depth, max_features = max_features)
+    rf.fit(X_train, y_train)
+    # Realice predicciones de prueba
+    predictions = rf.predict(X_test)
+  
+    # Registre los parámetros
+    mlflow.log_param("num_trees", n_estimators)
+    mlflow.log_param("maxdepth", max_depth)
+    mlflow.log_param("max_feat", max_features)
+  
+    # Registre el modelo
+    mlflow.sklearn.log_model(rf, "random-forest-model")
+  
+    # Cree y registre la métrica de interés
+    mse = mean_squared_error(y_test, predictions)
+    mlflow.log_metric("mse", mse)
+    print(mse)
