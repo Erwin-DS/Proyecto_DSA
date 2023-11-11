@@ -40,17 +40,16 @@ X_pca = pca.fit_transform(X_scaled)
 
 def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
     # Iniciamos una corrida de MLflow
-    mlflow.start_run(run_name=run_name)
-    run = mlflow.active_run()
+   with mlflow.start_run(run_name=run_name) as run:
+    
     # MLflow asigna un ID al experimento y a la corrida
-    experimentID = run.info.experiment_id
-    runID = run.info.run_uuid
+    experiment_id = run.info.experiment_id
+    run_id = run.info.run_uuid
 
     # Log de parámetros en MLflow
     mlflow.log_param("n_clusters", n_clusters)
-
     # Crear el modelo K-means
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
     kmeans.fit(X)
 
     # Calcular la puntuación de silhouette
@@ -62,8 +61,6 @@ def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
     # Guardar el modelo en MLflow
     mlflow.sklearn.log_model(kmeans, "model")
     
-    # Finalizar la ejecución actual
-    mlflow.end_run()
     return experiment_id, run_id
 
 # Ejecutar la función con diferentes valores de clusters
