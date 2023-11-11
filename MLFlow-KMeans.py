@@ -43,15 +43,15 @@ def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
     # Iniciamos una corrida de MLflow
    with mlflow.start_run(run_name=run_name) as run:
     
-    # MLflow asigna un ID al experimento y a la corrida
-    experiment_id = run.info.experiment_id
-    run_id = run.info.run_uuid
+    	# MLflow asigna un ID al experimento y a la corrida
+    	experiment_id = run.info.experiment_id
+    	run_id = run.info.run_uuid
 
-    # Log de parámetros en MLflow
-    mlflow.log_param("n_clusters", n_clusters)
-    # Crear el modelo K-means
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
-    kmeans.fit(X)
+    	# Log de parámetros en MLflow
+    	mlflow.log_param("n_clusters", n_clusters)
+    	# Crear el modelo K-means
+    	kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+    	kmeans.fit(X)
 
     with mlflow.start_run(run_name=run_name):
         # Log de parámetros en MLflow
@@ -69,13 +69,13 @@ def train_evaluate_kmeans(X, n_clusters, run_name="MLflow KMeans"):
         mlflow.log_metric("silhouette_score", silhouette_avg)
 
 
-    # Log de métricas en MLflow
-    mlflow.log_metric("silhouette_score", silhouette_avg)
+    	# Log de métricas en MLflow
+    	mlflow.log_metric("silhouette_score", silhouette_avg)
 
-    # Guardar el modelo en MLflow
-    mlflow.sklearn.log_model(kmeans, "model")
+    	# Guardar el modelo en MLflow
+    	mlflow.sklearn.log_model(kmeans, "model")
     
-    return experiment_id, run_id
+    	return experiment_id, run_id
 
         # Guardar el modelo en MLflow
         mlflow.sklearn.log_model(kmeans, "model")
