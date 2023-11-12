@@ -70,6 +70,9 @@ predicciones = pd.concat([data_inicial, pd.Series(labels, name='Número de Clust
 # Guardar predicciones en el repositorio
 predicciones.to_csv('Proyecto_DSA/Predicciones.csv', index=False)
 
+val_num.to_csv('Proyecto_DSA/X.csv', index=False)
+
+
 # Lograr los resultados en MLflow
 with mlflow.start_run():
     # Lograr el nombre del experimento y su ID
