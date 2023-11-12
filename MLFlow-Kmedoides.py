@@ -8,7 +8,7 @@ from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn_extra.cluster import KMedoids
-from sklearn.metrics import pairwise_distances
+from scipy.spatial.distance import pdist, squareform
 
 # Cargar tus datos (en este caso, se asume que ya tienes "X_pca" cargado)
 #Cargamos los datos
@@ -41,14 +41,14 @@ X_scaled = scaler.fit_transform(X)
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
 
-
 # Configurar el experimento en MLflow con el nombre "Kmeans"
 experiment_name = "Kmedoides"
 mlflow.set_experiment(experiment_name)
 
 
 # Calcular la matriz de distancias
-distances = pairwise_distances(X_pca, metric='euclidean')
+dist = pdist(X_pca, metric='euclidean')
+distances = squareform(dist)
 
 # Definir el número de clústeres (puedes ajustar esto según tus necesidades)
 num_clusters = 3
@@ -56,8 +56,6 @@ num_clusters = 3
 # Crear y entrenar el modelo KMeans
 model = KMedoids(n_clusters=num_clusters, metric='precomputed', random_state=42).fit(distances)
 model.fit(X_pca)
-
-medoid_indices = model.medoid_indices_
 
 # Predecir las etiquetas de los clústeres
 labels = model.labels_
