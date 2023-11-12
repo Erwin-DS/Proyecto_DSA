@@ -180,3 +180,23 @@ De acuerdo con los resultados, podemos observar que la distribución de los dato
 
 
 """
+
+"""# Seleccionamos las variables de Page Values, bounce rates y exits rates para comparar con box plot"""
+selected_vars = ['PageValues', 'BounceRates', 'ExitRates']
+
+"""# Boxplot para pagevalues, bounce rates y exit rates en función de Revenue"""
+plt.figure(figsize=(14, 8))
+for i, col in enumerate(selected_vars):
+    plt.subplot(1, 3, i + 1)
+    sns.boxplot(x='Revenue', y=col, data=df_con_dummies, palette='Set2')
+    plt.title(f'Boxplot para {col}')
+#Mostramos el graficto
+plt.tight_layout()
+plt.show()
+
+"""# obtenemos las estadisticas descriptivas"""
+desc_stats = df_con_dummies.groupby('Revenue')[selected_vars].describe()
+print("Estadisticas Descriptivas:")
+print(desc_stats)
+
+"""##Con el boxplot podemos ver que las visitas que no generan revenue tienen una tasa de rebote mucho más alta en comparación con las que si. La media es de 0.0253 mientras que las que sí generan revenue tiene una media de 0.00051, mostrando una tasa de rebote significativamente baja. De esto se puede concluir que las visitas que, si generan ingresos a la empresa, tienen menos probabilidad de tener un alto porcentaje de bounce rates."""
