@@ -64,16 +64,12 @@ confianza = 1/(1+ distancias.min(axis=1))
 silhouette_avg = silhouette_score(X_pca, labels)
 
 # Crear Dataframe de variables originales incluyendo el número de cluster y confianza
-data_inicial = pd.DataFrame(X, columns=[f'Variable_{i}' for i in range(X.shape[1])])
-predicciones = pd.concat([data_inicial, pd.Series(labels, name='Número de Cluster'), pd.Series(confianza, name='Confianza')], axis=1)
+predicciones = pd.concat([val_num, pd.Series(labels, name='Número de Cluster'), pd.Series(confianza, name='Confianza')], axis=1)
 
 # Guardar predicciones en el repositorio
 predicciones.to_csv('Proyecto_DSA/Predicciones.csv', index=False)
 
-val_num.to_csv('Proyecto_DSA/X.csv', index=False)
-
-
-# Lograr los resultados en MLflow
+#  Lograr los resultados en MLflow
 with mlflow.start_run():
     # Lograr el nombre del experimento y su ID
     experiment_id = mlflow.get_experiment_by_name(experiment_name).experiment_id
