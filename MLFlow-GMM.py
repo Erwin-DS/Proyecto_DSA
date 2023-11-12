@@ -54,7 +54,7 @@ model = GaussianMixture(n_components=num_components)
 model.fit(X_pca)
 
 # Predecir las etiquetas de los clústeres
-labels = model.labels_
+labels = model.predict(X_pca)
 
 # Calcular el coeficiente de silueta
 silhouette_avg = silhouette_score(X_pca, labels)
