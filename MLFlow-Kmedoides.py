@@ -55,7 +55,6 @@ num_clusters = 3
 
 # Crear y entrenar el modelo KMeans
 model = KMedoids(n_clusters=num_clusters, metric='precomputed', random_state=42).fit(distances)
-model.fit(X_pca)
 
 # Predecir las etiquetas de los clústeres
 labels = model.labels_
