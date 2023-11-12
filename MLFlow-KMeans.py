@@ -45,7 +45,7 @@ experiment_name = "Kmeans"
 mlflow.set_experiment(experiment_name)
 
 # Definir el número de clústeres (puedes ajustar esto según tus necesidades)
-num_clusters = 8
+num_clusters = 3
 
 # Crear y entrenar el modelo KMeans
 model = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)
@@ -54,8 +54,21 @@ model.fit(X_pca)
 # Predecir las etiquetas de los clústeres
 labels = model.labels_
 
+# Calcular las distancias
+distancias = model.transform(X_pca)
+
+# Calculo de medida de confianza
+confianza = 1/(1+ distancias.min(axis=1))
+
 # Calcular el coeficiente de silueta
 silhouette_avg = silhouette_score(X_pca, labels)
+
+# Crear Dataframe de variables originales incluyendo el número de cluster y confianza
+data_inicial = pd.DataFrame(X, columns=[f'Variable_{i}' for i in range(X.shape[1])])
+predicciones = pd.concat([data_inicial, pd.Series(labels, name='Número de Cluster'), pd.Series(confianza, name='Confianza')], axis=1)
+
+# Guardar predicciones en el repositorio
+predicciones.to_csv('Proyecto_DSA/Predicciones.csv', index=False)
 
 # Lograr los resultados en MLflow
 with mlflow.start_run():
