@@ -45,7 +45,7 @@ experiment_name = "Kmeans"
 mlflow.set_experiment(experiment_name)
 
 # Definir el número de clústeres (puedes ajustar esto según tus necesidades)
-num_clusters = 6
+num_clusters = 8
 
 # Crear y entrenar el modelo KMeans
 model = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)

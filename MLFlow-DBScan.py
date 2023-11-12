@@ -46,8 +46,8 @@ experiment_name = "DBScan"
 mlflow.set_experiment(experiment_name)
 
 # Definir los parametros (puedes ajustar esto según tus necesidades)
-param_min_samples = 4
-param_eps = 0.7
+param_min_samples = 3
+param_eps = 0.5
 
 # Crear y entrenar el modelo DBScan
 model = DBSCAN(eps=param_eps, min_samples=param_min_samples)

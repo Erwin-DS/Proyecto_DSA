@@ -51,7 +51,7 @@ dist = pdist(X_pca, metric='euclidean')
 distances = squareform(dist)
 
 # Definir el número de clústeres (puedes ajustar esto según tus necesidades)
-num_clusters = 3
+num_clusters = 12
 
 # Crear y entrenar el modelo KMeans
 model = KMedoids(n_clusters=num_clusters, metric='precomputed', random_state=42).fit(distances)
