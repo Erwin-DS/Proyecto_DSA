@@ -41,15 +41,15 @@ X_scaled = scaler.fit_transform(X)
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
 
-# Configurar el experimento en MLflow con el nombre "Kmeans"
+# Configurar el experimento en MLflow con el nombre "DBScan"
 experiment_name = "DBScan"
 mlflow.set_experiment(experiment_name)
 
-# Definir el número de clústeres (puedes ajustar esto según tus necesidades)
+# Definir los parametros (puedes ajustar esto según tus necesidades)
 param_min_samples = 4
 param_eps = 0.7
 
-# Crear y entrenar el modelo KMeans
+# Crear y entrenar el modelo DBScan
 model = DBSCAN(eps=param_eps, min_samples=param_min_samples)
 model.fit(X_pca)
 
