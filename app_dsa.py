@@ -31,7 +31,7 @@ from sklearn.decomposition import PCA
 
 # Cargar tus datos (en este caso, se asume que ya tienes "X_pca" cargado)
 #Cargamos los datos
-df = pd.read_csv('Proyecto_DSA/data/online_shoppers_intention.csv', sep=',')
+df = pd.read_csv('data/online_shoppers_intention.csv', sep=',')
 df.Weekend = df.Weekend.replace({True: 1, False: 0})
 df.Revenue = df.Revenue.replace({True: 1, False: 0})
 
@@ -341,6 +341,6 @@ def update_output(selected_month, selected_sd, selected_region, selected_weekend
 
 # Ejecutar el servidor
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", debug=True)
+    app.run_server(host="0.0.0.0", port=8051, debug=True)
 
 
